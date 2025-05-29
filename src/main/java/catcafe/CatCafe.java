@@ -34,14 +34,16 @@ public class CatCafe {
      * @param name name of the cat
      * @return cat with the given name
      */
-    public FelineOverLord getCatByName(String name) {
-        if (name == null) return null;
+    public Optional<FelineOverLord> getCatByName(String name) {
+        // Wenn name leer wird empty zurückgegeben verhindert NullPointer
+        if (name == null) return Optional.empty();
 
-        for (FelineOverLord c : clowder) {
-            if (c.name().equals(name)) return c;
-        }
-
-        return null;
+        // Stream erzeugen
+        return clowder.stream()
+            // Nur katzen mit dem passendem Namen werden rausgesucht
+            .filter(c -> c.name().equals(name))
+            // Waehlt die erste Katze mit dem Namen
+            .findFirst();
     }
 
     /**
@@ -51,15 +53,17 @@ public class CatCafe {
      * @param maxWeight upper weight limit (exclusive)
      * @return cat within the weight limits
      */
-    public FelineOverLord getCatByWeight(int minWeight, int maxWeight) {
-        if (minWeight < 0) return null;
-        if (maxWeight < minWeight) return null;
+    public Optional<FelineOverLord> getCatByWeight(int minWeight, int maxWeight) {
 
-        for (FelineOverLord c : clowder) {
-            if (c.weight() >= minWeight && c.weight() < maxWeight) return c;
-        }
+        // Wenn die eingabe ungueltig ist wird empty zurueckgegeben
+        if (minWeight < 0 || maxWeight < minWeight) return Optional.empty();
 
-        return null;
+        // Stream erzeugen
+        return clowder.stream()
+            // Nur katzen mit dem passendem Gewicht werden rausgesucht
+            .filter(c -> c.weight() >= minWeight && c.weight() < maxWeight)
+            // Waehlt die erste Katze mit dem Gewicht
+            .findFirst();
     }
 
     /**
